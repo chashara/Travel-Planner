@@ -1,21 +1,36 @@
-import { useEffect, useState } from "react";
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+import { useState } from "react";
+import TripForm from "./components/TripForm";
+import { generateItinerary } from "./api";
+import "./App.css";
 
 export default function App() {
-  const [status, setStatus] = useState("checking...");
+  const [itinerary, setItinerary] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  useEffect(() => {
-    fetch(`${API_URL}/api/health`)
-      .then((r) => r.json())
-      .then((d) => setStatus(d.status))
-      .catch(() => setStatus("server unreachable"));
-  }, []);
+  const handleGenerate = async (request) => {
+    setLoading(true);
+    setError("");
+    try {
+      const result = await generateItinerary(request);
+      setItinerary(result);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div style={{ padding: 24 }}>
+    <div className="app">
       <h1>Travel Planner</h1>
-      <p>Server status: {status}</p>
+      <TripForm onSubmit={handleGenerate} loading={loading} />
+
+      {loading && <p className="status">Building your itinerary. This can take up to 30 seconds...</p>}
+      {error && <p className="status error-banner">{error}</p>}
+
+      {/* Temporary: Day 4 replaces this with a real itinerary view */}
+      {itinerary && !loading && <pre className="raw">{JSON.stringify(itinerary, null, 2)}</pre>}
     </div>
   );
 }

@@ -41,3 +41,15 @@ export const TripRequestSchema = z.object({
   interests: z.array(z.string()).optional(),
   groupSize: z.number().int().min(1).default(1),
 });
+
+// What the AI returns (no IDs, we add those)
+export const GeneratedItinerarySchema = z.object({
+  trip: ItinerarySchema.shape.trip,
+  days: z.array(
+    z.object({
+      dayNumber: z.number().int().positive(),
+      title: z.string(),
+      activities: z.array(ActivitySchema.omit({ id: true })),
+    })
+  ),
+});

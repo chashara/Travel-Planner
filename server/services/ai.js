@@ -4,7 +4,7 @@ import { randomUUID } from "crypto";
 import { GeneratedItinerarySchema, CATEGORIES } from "../schema.js";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-const MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+const MODEL = process.env.GEMINI_MODEL || "gemini-3.8-flash";
 
 const { $schema, ...jsonSchema } = z.toJSONSchema(GeneratedItinerarySchema);
 
@@ -17,6 +17,9 @@ Rules:
 - Group nearby places on the same day. Don't overpack days.
 - Category must be one of: ${CATEGORIES.join(", ")}.
 - Use real places and realistic prices for the destination.
+- Hotel check-in should not be before 15:00 unless the traveler asks otherwise. Put the full lodging cost for all nights on the check-in activity and say how many nights it covers.
+- Use the travel style to decide how much of the budget to spend: budget = well under, balanced = moderate, comfort and luxury = use most of the budget on better hotels, restaurants and experiences.
+- Tag an activity with the category of its main purpose, not a side detail.
 - Respond with JSON only, matching the provided schema.`;
 
 function buildUserPrompt(r) {
