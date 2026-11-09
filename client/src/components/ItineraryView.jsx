@@ -1,7 +1,8 @@
 import DayCard from "./DayCard";
+import { updateActivity, deleteActivity, addActivity, moveActivity } from "../itineraryOps";
 import { formatMoney, sumTrip } from "../utils";
 
-export default function ItineraryView({ itinerary }) {
+export default function ItineraryView({ itinerary, onChange }) {
   const { trip, days } = itinerary;
   const total = sumTrip(days);
   const percent = trip.budget > 0 ? Math.min((total / trip.budget) * 100, 100) : 0;
@@ -31,7 +32,15 @@ export default function ItineraryView({ itinerary }) {
       </header>
 
       {days.map((day) => (
-        <DayCard key={day.id} day={day} currency={trip.currency} />
+        <DayCard
+          key={day.id}
+          day={day}
+          currency={trip.currency}
+          onUpdate={(activityId, patch) => onChange(updateActivity(itinerary, day.id, activityId, patch))}
+          onDelete={(activityId) => onChange(deleteActivity(itinerary, day.id, activityId))}
+          onMove={(activityId, direction) => onChange(moveActivity(itinerary, day.id, activityId, direction))}
+          onAdd={() => onChange(addActivity(itinerary, day.id))}
+        />
       ))}
 
       <p className="disclaimer">
