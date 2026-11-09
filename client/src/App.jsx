@@ -1,3 +1,4 @@
+import ItineraryView from "./components/ItineraryView";
 import { useState } from "react";
 import TripForm from "./components/TripForm";
 import { generateItinerary } from "./api";
@@ -29,8 +30,7 @@ export default function App() {
       {loading && <p className="status">Building your itinerary. This can take up to 30 seconds...</p>}
       {error && <p className="status error-banner">{error}</p>}
 
-      {/* Temporary: Day 4 replaces this with a real itinerary view */}
-      {itinerary && !loading && <pre className="raw">{JSON.stringify(itinerary, null, 2)}</pre>}
+      {itinerary && !loading && <ItineraryView itinerary={itinerary} />}
     </div>
   );
 }
