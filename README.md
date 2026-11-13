@@ -1,6 +1,8 @@
 # Travel Planner
 
 An AI-powered travel planner. Enter a destination, trip length, budget and interests, get a day-by-day itinerary, then edit it by hand and take it with you as a PDF.
+<img width="592" height="362" alt="image" src="https://github.com/user-attachments/assets/366445e9-f3f7-4a29-8991-5e1bd186f145" />
+
 
 ## Features
 
@@ -10,6 +12,9 @@ An AI-powered travel planner. Enter a destination, trip length, budget and inter
 - **PDF export:** a print-optimised layout turns the itinerary into a clean PDF with selectable text.
 - **Save and restore:** the trip autosaves in the browser, and can be downloaded as a `.json` file and imported again later or on another device.
 - **Responsive design:** works on desktop and mobile.
+
+  <img width="482" height="377" alt="image" src="https://github.com/user-attachments/assets/93c12a0c-1e31-4b61-bbb1-1c25c20a3ab0" />
+
 
 ## Tech stack
 
