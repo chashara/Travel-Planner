@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import TripForm from "./components/TripForm";
 import ItineraryView from "./components/ItineraryView";
-import { generateItinerary } from "./api";
+import { generateItinerary, wakeServer } from "./api";
 import { loadItinerary, saveItinerary, clearItinerary, downloadItinerary, readItineraryFile } from "./storage";
 import { printItinerary } from "./pdf";
 import "./App.css";
@@ -11,6 +11,11 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const fileInput = useRef(null);
+
+  // Wake the server up as soon as the page opens
+  useEffect(() => {
+    wakeServer();
+  }, []);
 
   // Autosave on every change
   useEffect(() => {
@@ -82,7 +87,11 @@ export default function App() {
       </div>
       {itinerary && <p className="hint">Your trip is saved automatically in this browser.</p>}
 
-      {loading && <p className="status">Building your itinerary. This can take up to 30 seconds...</p>}
+      {loading && (
+        <p className="status">
+          Building your itinerary. This usually takes 10 to 30 seconds, and up to a minute if the server was asleep...
+        </p>
+      )}
       {error && <p className="status error-banner">{error}</p>}
 
       {itinerary && !loading && <ItineraryView itinerary={itinerary} onChange={setItinerary} onReset={handleReset} />}
