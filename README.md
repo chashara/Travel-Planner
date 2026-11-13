@@ -2,15 +2,6 @@
 
 An AI-powered travel planner. Enter a destination, trip length, budget and interests, get a day-by-day itinerary, then edit it by hand and take it with you as a PDF.
 
-**Live demo:** [YOUR_LIVE_URL_HERE](YOUR_LIVE_URL_HERE)
-
-> The demo runs on free hosting. If nobody has used it for a while, the server is asleep and the first request can take up to a minute. After that it responds normally.
-
-
-![Trip form](docs/form.png)
-![Generated itinerary](docs/itinerary.png)
-![PDF export](docs/pdf.png)
-
 ## Features
 
 - **AI itinerary generation:** country, city, number of days, total budget, currency, group size, travel style and interests go in; a structured, day-by-day plan comes out.
