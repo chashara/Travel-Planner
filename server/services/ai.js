@@ -34,9 +34,9 @@ function buildUserPrompt(r) {
     .join("\n");
 }
 
-async function callModel(request) {
+async function callModel(request, model) {
   const response = await ai.models.generateContent({
-    model: MODEL,
+    model,
     contents: buildUserPrompt(request),
     config: {
       systemInstruction: SYSTEM_PROMPT,
@@ -60,15 +60,30 @@ function addIds(generated) {
 }
 
 // Try once, retry once on failure (skip the retry if we hit a quota limit)
+const FALLBACK_MODEL = process.env.GEMINI_FALLBACK_MODEL; // optional
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// Temporary problems worth retrying: Google overloaded (503), server errors, or a bad/invalid AI response
+function isRetryable(err) {
+  return [500, 503, 504].includes(err.status) || err.name === "ZodError" || err instanceof SyntaxError;
+}
+
 export async function generateItinerary(request) {
+  const models = [MODEL, FALLBACK_MODEL].filter(Boolean);
   let lastError;
-  for (let attempt = 1; attempt <= 2; attempt++) {
-    try {
-      return addIds(await callModel(request));
-    } catch (err) {
-      lastError = err;
-      console.error(`Generation attempt ${attempt} failed:`, err.message);
-      if (err.status === 429) break;
+
+  for (const model of models) {
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        return addIds(await callModel(request, model));
+      } catch (err) {
+        lastError = err;
+        console.error(`[${model}] attempt ${attempt} failed:`, err.message);
+
+        if (err.status === 429) break; // quota hit on this model: try the next one
+        if (!isRetryable(err)) throw err; // e.g. bad key or model name: retrying won't help
+        if (attempt < 3) await sleep(1500 * attempt); // wait 1.5s, then 3s
+      }
     }
   }
   throw lastError;

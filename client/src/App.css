@@ -442,3 +442,83 @@ textarea {
     padding-top: 0;
   }
 }
+
+/* ---------- Day 7 additions ---------- */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+.hint {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* ---------- print / PDF ---------- */
+@page {
+  margin: 16mm;
+}
+
+@media print {
+  body {
+    background: white;
+  }
+  .app {
+    max-width: none;
+    padding: 0;
+  }
+
+  /* Hide everything interactive */
+  button,
+  .app-header,
+  .trip-form,
+  .toolbar,
+  .hint,
+  .status,
+  .footer-actions {
+    display: none !important;
+  }
+
+  .itinerary {
+    margin-top: 0;
+    gap: 14px;
+  }
+
+  .trip-header,
+  .day-card {
+    box-shadow: none;
+    border: 1px solid #e6d9dc;
+    background: white;
+  }
+
+  .trip-header h2 {
+    font-size: 22px;
+  }
+
+  .budget-bar {
+    background: #f3e4e7;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .budget-fill {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .day-header {
+    break-after: avoid;
+  }
+  .activity {
+    break-inside: avoid;
+  }
+  .day-card {
+    break-inside: auto;
+  }
+
+  .activity-icon {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
